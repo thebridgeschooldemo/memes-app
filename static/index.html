@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería de Memes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex">
+        <!-- Sidebar de Filtros -->
+        <aside class="w-80 bg-white border-r border-gray-200 p-6 hidden lg:block">
+            <h2 class="text-xl font-bold text-gray-900 mb-8">Filtros</h2>
+            
+            <!-- Filtro por Fuente -->
+            <div class="mb-8">
+                <h3 class="text-sm font-semibold text-gray-700 mb-4">Fuente</h3>
+                <p class="text-xs text-gray-500 mb-4">(detectada por CV)</p>
+                
+                <div class="space-y-3">
+                    <label class="flex items-center cursor-pointer">
+                        <input type="checkbox" class="source-filter" value="Reddit" class="w-4 h-4 text-orange-500">
+                        <span class="ml-3 text-sm text-gray-700">
+                            <i class="fab fa-reddit text-orange-500 mr-2"></i>Reddit
+                        </span>
+                        <span class="ml-auto text-xs text-gray-500">comunidades</span>
+                    </label>
+                    
+                    <label class="flex items-center cursor-pointer">
+                        <input type="checkbox" class="source-filter" value="Twitter" class="w-4 h-4 text-gray-800">
+                        <span class="ml-3 text-sm text-gray-700">
+                            <i class="fab fa-x-twitter text-gray-800 mr-2"></i>X
+                        </span>
+                        <span class="ml-auto text-xs text-gray-500">tweets, layout...</span>
+                    </label>
+                    
+                    <label class="flex items-center cursor-pointer">
+                        <input type="checkbox" class="source-filter" value="Devs" class="w-4 h-4 text-teal-500">
+                        <span class="ml-3 text-sm text-gray-700">
+                            <i class="fas fa-code text-teal-500 mr-2"></i>Devs
+                        </span>
+                        <span class="ml-auto text-xs text-gray-500">slides, terminal...</span>
+                    </label>
+                    
+                    <label class="flex items-center cursor-pointer">
+                        <input type="checkbox" class="source-filter" value="Unknown" class="w-4 h-4 text-gray-400">
+                        <span class="ml-3 text-sm text-gray-700">
+                            <i class="fas fa-lightbulb text-gray-400 mr-2"></i>Otras
+                        </span>
+                        <span class="ml-auto text-xs text-gray-500">no identificada</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Botones de Filtro -->
+            <div class="space-y-3">
+                <button id="clearFilters" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium py-2 px-4 rounded transition">
+                    Limpiar filtros
+                </button>
+                <button id="moreFilters" class="w-full text-gray-600 hover:text-gray-900 py-2 px-4 text-sm font-medium">
+                    Más filtros <i class="fas fa-chevron-down ml-2"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1">
+            <!-- Search Bar -->
+            <div class="bg-white border-b border-gray-200 p-6 sticky top-0 z-10">
+                <div class="max-w-6xl mx-auto">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Buscar memes..." 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                </div>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div class="p-6">
+                <div class="max-w-6xl mx-auto">
+                    <div id="gallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Meme cards se cargarán aquí con JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading" class="text-center py-12">
+                <div class="inline-block">
+                    <div class="w-12 h-12 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+                </div>
+                <p class="mt-4 text-gray-600">Cargando memes...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty" class="text-center py-12 hidden">
+                <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
+                <p class="text-gray-600">No se encontraron memes</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Estado de la aplicación
+        let allMemes = [];
+        let filteredMemes = [];
+        let activeFilters = {
+            sources: [],
+            search: ''
+        };
+
+        // Elementos del DOM
+        const gallery = document.getElementById('gallery');
+        const loading = document.getElementById('loading');
+        const empty = document.getElementById('empty');
+        const searchInput = document.getElementById('searchInput');
+        const sourceFilters = document.querySelectorAll('.source-filter');
+        const clearFiltersBtn = document.getElementById('clearFilters');
+
+        // Mapeo de iconos y colores por fuente
+        const sourceConfig = {
+            'Reddit': {
+                icon: 'fab fa-reddit',
+                color: 'text-orange-500',
+                label: 'Reddit'
+            },
+            'Twitter': {
+                icon: 'fab fa-x-twitter',
+                color: 'text-gray-800',
+                label: 'X'
+            },
+            'Devs': {
+                icon: 'fas fa-code',
+                color: 'text-teal-500',
+                label: 'Devs'
+            },
+            'Unknown': {
+                icon: 'fas fa-lightbulb',
+                color: 'text-gray-400',
+                label: 'Otras'
+            }
+        };
+
+        // Cargar memes desde la API
+        async function loadMemes() {
+            try {
+                loading.classList.remove('hidden');
+                empty.classList.add('hidden');
+                gallery.innerHTML = '';
+
+                const response = await fetch('/api/memes');
+                allMemes = await response.json();
+                
+                applyFilters();
+            } catch (error) {
+                console.error('Error al cargar memes:', error);
+                loading.classList.add('hidden');
+                empty.classList.remove('hidden');
+            }
+        }
+
+        // Aplicar filtros y búsqueda
+        function applyFilters() {
+            filteredMemes = allMemes.filter(meme => {
+                // Filtro por fuente
+                if (activeFilters.sources.length > 0) {
+                    if (!activeFilters.sources.includes(meme.source)) {
+                        return false;
+                    }
+                }
+
+                // Filtro por búsqueda
+                if (activeFilters.search) {
+                    const search = activeFilters.search.toLowerCase();
+                    const description = meme.description.toLowerCase();
+                    if (!description.includes(search)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            renderGallery();
+        }
+
+        // Renderizar galería
+        function renderGallery() {
+            loading.classList.add('hidden');
+
+            if (filteredMemes.length === 0) {
+                gallery.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            gallery.innerHTML = filteredMemes.map(meme => createMemeCard(meme)).join('');
+        }
+
+        // Crear tarjeta de meme
+        function createMemeCard(meme) {
+            const sourceInfo = sourceConfig[meme.source] || sourceConfig['Unknown'];
+            const imageUrl = meme.image.url;
+            const rating = meme.rating ? `⭐ ${meme.rating}` : '';
+
+            return `
+                <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition transform hover:scale-105">
+                    <!-- Imagen -->
+                    <div class="relative bg-gray-200 overflow-hidden h-48">
+                        <img 
+                            src="${imageUrl}" 
+                            alt="${meme.description}"
+                            class="w-full h-full object-cover"
+                            onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-size=%2214%22 fill=%22%23999%22 text-anchor=%22middle%22 dy=%22.3em%22%3EImagen%3C/text%3E%3C/svg%3E'"
+                        >
+                        <!-- Badge de fuente -->
+                        <div class="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md">
+                            <i class="${sourceInfo.icon} ${sourceInfo.color}"></i>
+                        </div>
+                    </div>
+
+                    <!-- Contenido -->
+                    <div class="p-4">
+                        <p class="text-sm text-gray-600 line-clamp-2 mb-3">${meme.description}</p>
+                        ${rating ? `<p class="text-xs font-semibold text-gray-900 mb-3">${rating}</p>` : ''}
+                        
+                        <!-- Acciones -->
+                        <div class="flex items-center justify-between pt-3 border-t border-gray-200">
+                            <button class="text-gray-400 hover:text-red-500 transition flex-1 text-center py-2" title="Me gusta">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-blue-500 transition flex-1 text-center py-2" title="Descargar">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-green-500 transition flex-1 text-center py-2" title="Copiar enlace">
+                                <i class="fas fa-link"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Event Listeners
+        sourceFilters.forEach(filter => {
+            filter.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    activeFilters.sources.push(e.target.value);
+                } else {
+                    activeFilters.sources = activeFilters.sources.filter(s => s !== e.target.value);
+                }
+                applyFilters();
+            });
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            activeFilters.search = e.target.value;
+            applyFilters();
+        });
+
+        clearFiltersBtn.addEventListener('click', () => {
+            activeFilters = { sources: [], search: '' };
+            sourceFilters.forEach(filter => filter.checked = false);
+            searchInput.value = '';
+            applyFilters();
+        });
+
+        // Cargar memes al iniciar
+        loadMemes();
+    </script>
+</body>
+</html>

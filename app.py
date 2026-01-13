@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Path
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 from typing import Annotated
 
@@ -15,7 +16,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to the Meme API!"}
+    return FileResponse("static/index.html")
 
 
 @app.get("/api/memes")
