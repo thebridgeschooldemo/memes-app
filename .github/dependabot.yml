@@ -1,0 +1,33 @@
+# Configuración de Dependabot
+# Docs: https://docs.github.com/es/code-security/dependabot
+
+version: 2
+
+updates:
+  # Actualizar dependencias de Python (pip)
+  - package-ecosystem: "pip"
+    directory: "/"  # Busca requirements.txt en la raíz
+    schedule:
+      interval: "weekly"  # Revisa cada semana
+      day: "monday"       # Los lunes
+      time: "09:00"       # A las 9:00 AM
+      timezone: "Europe/Madrid"
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "⬆️ pip:"
+    open-pull-requests-limit: 5  # Máximo 5 PRs abiertos a la vez
+
+  # Actualizar GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "ci-cd"
+    commit-message:
+      prefix: "⬆️ actions:"
+    open-pull-requests-limit: 3
