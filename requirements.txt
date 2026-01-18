@@ -1,5 +1,7 @@
 fastapi[standard]==0.128.0
 ruff==0.14.13
+pytest==8.3.5
+httpx==0.28.1
 
 # Security & Auth (versions with known CVEs)
 pyjwt==2.4.0
