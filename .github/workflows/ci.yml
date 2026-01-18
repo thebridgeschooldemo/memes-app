@@ -11,20 +11,16 @@ jobs:
   test:
     runs-on: ubuntu-latest  # Usa una máquina virtual con Ubuntu
 
-    strategy:
-      matrix:
-        python-version: ['3.10', '3.11', '3.12']  # Prueba en varias versiones
-
     steps:
     # 1. Descargar el código del repo
     - name: 📥 Checkout del código
       uses: actions/checkout@v4
 
     # 2. Instalar Python
-    - name: 🐍 Configurar Python ${{ matrix.python-version }}
+    - name: 🐍 Configurar Python 3.13
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: '3.13'
 
     # 3. Instalar dependencias
     - name: 📦 Instalar dependencias
