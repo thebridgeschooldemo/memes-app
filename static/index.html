@@ -5,41 +5,189 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galería de Memes</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #aaa; }
+        
+        .filter-item { transition: all 0.2s ease; }
+        .filter-item:hover { background-color: #f3f4f6; }
+        .filter-item.active { background-color: #e5e7eb; font-weight: 600; }
+        
+        .meme-card { 
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s ease;
+        }
+        .meme-card:hover { 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .action-btn {
+            transition: all 0.15s ease;
+        }
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+        .action-btn.favorito.active svg {
+            fill: #ef4444;
+            color: #ef4444;
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <!-- Cabecera -->
-    <header class="bg-blue-600 text-white p-4">
-        <h1 class="text-2xl font-bold">🎭 Galería de Memes</h1>
-    </header>
-
-    <!-- Filtros -->
-    <section id="filtros" class="p-4 bg-white shadow-md">
-        <div class="container mx-auto">
-            <h2 class="text-lg font-semibold mb-3 text-gray-700">Filtrar por fuente:</h2>
-            <div class="flex flex-wrap gap-2">
-                <button class="filtro-btn px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors" data-source="all">
-                    Todos
-                </button>
-                <button class="filtro-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors" data-source="Reddit">
-                    Reddit
-                </button>
-                <button class="filtro-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors" data-source="Twitter">
-                    Twitter
-                </button>
-                <button class="filtro-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors" data-source="Devs">
-                    Devs
-                </button>
-                <button class="filtro-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors" data-source="Unknown">
-                    Unknown
-                </button>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Barra de búsqueda superior -->
+    <header class="bg-white border-b border-gray-200 p-4 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto">
+            <div class="relative">
+                <span class="absolute inset-y-0 left-4 flex items-center text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </span>
+                <input 
+                    type="text" 
+                    id="buscador" 
+                    placeholder="Buscar memes..." 
+                    class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                >
             </div>
         </div>
-    </section>
+    </header>
 
-    <!-- Galería -->
-    <main id="galeria" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 container mx-auto">
-        <!-- Aquí se cargarán los memes dinámicamente -->
-    </main>
+    <div class="flex max-w-7xl mx-auto">
+        <!-- Panel lateral de filtros -->
+        <aside class="w-64 bg-white border-r border-gray-200 min-h-[calc(100vh-73px)] p-4 flex-shrink-0">
+            <div class="sticky top-24">
+                <h2 class="text-lg font-bold text-gray-800 mb-1">Filtros</h2>
+                
+                <!-- Filtros por fuente -->
+                <div class="mb-6">
+                    <h3 class="text-sm font-semibold text-gray-700 mb-1">Fuente</h3>
+                    <p class="text-xs text-gray-500 mb-3">(detectada por CV)</p>
+                    
+                    <div class="space-y-1" id="filtros-fuente">
+                        <!-- Reddit -->
+                        <label class="filter-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" data-source="Reddit">
+                            <input type="checkbox" class="filtro-checkbox hidden" value="Reddit">
+                            <span class="w-6 h-6 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-orange-500" viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <circle cx="8" cy="11" r="1.5" fill="white"/>
+                                    <circle cx="16" cy="11" r="1.5" fill="white"/>
+                                    <path d="M8 15c0 0 2 2 4 2s4-2 4-2" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <span class="text-sm font-medium text-gray-700">Reddit</span>
+                                <p class="text-xs text-gray-500">comunidades</p>
+                            </div>
+                        </label>
+                        
+                        <!-- X (Twitter) -->
+                        <label class="filter-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" data-source="Twitter">
+                            <input type="checkbox" class="filtro-checkbox hidden" value="Twitter">
+                            <span class="w-6 h-6 flex items-center justify-center">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <span class="text-sm font-medium text-gray-700">X</span>
+                                <p class="text-xs text-gray-500">tweets, layouts...</p>
+                            </div>
+                        </label>
+                        
+                        <!-- Devs -->
+                        <label class="filter-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" data-source="Devs">
+                            <input type="checkbox" class="filtro-checkbox hidden" value="Devs">
+                            <span class="w-6 h-6 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="16,18 22,12 16,6"/>
+                                    <polyline points="8,6 2,12 8,18"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <span class="text-sm font-medium text-gray-700">Devs</span>
+                                <p class="text-xs text-gray-500">slides, terminal...</p>
+                            </div>
+                        </label>
+                        
+                        <!-- Otras -->
+                        <label class="filter-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" data-source="Unknown">
+                            <input type="checkbox" class="filtro-checkbox hidden" value="Unknown">
+                            <span class="w-6 h-6 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <span class="text-sm font-medium text-gray-700">Otras</span>
+                                <p class="text-xs text-gray-500">no identificada</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Botón limpiar filtros -->
+                <button 
+                    id="limpiar-filtros" 
+                    class="w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-300"
+                >
+                    Limpiar filtros
+                </button>
+                
+                <!-- Más filtros -->
+                <button 
+                    id="mas-filtros-btn"
+                    class="w-full mt-3 py-2 text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center justify-center gap-1 transition-colors"
+                >
+                    Más filtros
+                    <svg id="mas-filtros-icon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                
+                <!-- Filtros adicionales (ocultos por defecto) -->
+                <div id="filtros-adicionales" class="hidden mt-4 space-y-4">
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-700 mb-2">Rating mínimo</h3>
+                        <div class="flex gap-1">
+                            <button class="rating-filter px-3 py-1 text-sm border rounded hover:bg-gray-100" data-rating="1">⭐</button>
+                            <button class="rating-filter px-3 py-1 text-sm border rounded hover:bg-gray-100" data-rating="2">⭐⭐</button>
+                            <button class="rating-filter px-3 py-1 text-sm border rounded hover:bg-gray-100" data-rating="3">⭐⭐⭐</button>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-700 mb-2">Solo favoritos</h3>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="solo-favoritos" class="w-4 h-4 rounded">
+                            <span class="text-sm text-gray-600">Mostrar solo ❤️</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="flex-1 p-6">
+            <h1 class="text-xl font-bold text-gray-800 mb-4">Galería de Memes</h1>
+            
+            <!-- Galería -->
+            <div id="galeria" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <!-- Aquí se cargarán los memes dinámicamente -->
+            </div>
+            
+            <!-- Mensaje sin resultados -->
+            <div id="sin-resultados" class="hidden text-center py-12">
+                <p class="text-gray-500">No se encontraron memes con estos filtros.</p>
+            </div>
+        </main>
+    </div>
 
     <!-- Modal (oculto por defecto) -->
     <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -71,15 +219,35 @@
                 </div>
             </div>
             
-            <!-- Pie del modal -->
-            <div class="flex justify-end p-4 border-t">
-                <button id="modal-close-btn" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+            <!-- Acciones del modal -->
+            <div class="flex justify-between items-center p-4 border-t">
+                <div class="flex gap-4">
+                    <button id="modal-favorito" class="action-btn flex items-center gap-2 text-gray-600 hover:text-red-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                        Favorito
+                    </button>
+                    <button id="modal-descargar" class="action-btn flex items-center gap-2 text-gray-600 hover:text-blue-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        Descargar
+                    </button>
+                    <a id="modal-enlace" href="#" target="_blank" class="action-btn flex items-center gap-2 text-gray-600 hover:text-green-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                        </svg>
+                        Enlace
+                    </a>
+                </div>
+                <button id="modal-close-btn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
                     Cerrar
                 </button>
             </div>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="/static/app.js"></script>
 </body>
 </html>
