@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Path, Query, Request
+from fastapi import FastAPI, Path, Query
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import Response
 
@@ -62,6 +62,7 @@ async def update_meme(
 
 # VULNERABLE ENDPOINTS
 
+
 @app.get("/api/memes/search")
 async def search_memes_endpoint(q: str = Query(..., description="Search term")):
     """Search memes - VULNERABLE TO SQL INJECTION"""
@@ -102,7 +103,6 @@ async def debug_info():
         return {
             "admin_password_hash": hash_password(ADMIN_PASSWORD),
             "jwt_secret_preview": JWT_SECRET[:10] + "...",
-            "debug": True
+            "debug": True,
         }
     return {"debug": False}
-

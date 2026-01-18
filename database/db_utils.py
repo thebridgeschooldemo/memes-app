@@ -1,10 +1,14 @@
 """
 Database utilities for meme operations
 """
+
 import sqlite3
 import os
 import subprocess
-from config import DATABASE_PASSWORD, JWT_SECRET
+from config import DATABASE_PASSWORD
+import hashlib
+import pickle
+import base64
 
 # Create database connection
 DB_PATH = "memes.db"
@@ -60,7 +64,9 @@ def authenticate_user(username: str, password: str):
     conn = get_connection()
     cursor = conn.cursor()
     # BAD: SQL Injection vulnerability
-    query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
+    query = (
+        f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
+    )
     cursor.execute(query)
     user = cursor.fetchone()
     conn.close()
@@ -80,7 +86,9 @@ def process_image(image_path: str):
 def get_meme_metadata(url: str):
     """Fetch metadata from URL - VULNERABLE TO COMMAND INJECTION"""
     # BAD: User input in subprocess without sanitization
-    result = subprocess.run(f"curl -s {url}", shell=True, capture_output=True, text=True)
+    result = subprocess.run(
+        f"curl -s {url}", shell=True, capture_output=True, text=True
+    )
     return result.stdout
 
 
@@ -94,8 +102,6 @@ def get_meme_file(filename: str):
 
 
 # VULNERABILITY: Insecure deserialization
-import pickle
-import base64
 
 
 def load_user_preferences(encoded_prefs: str):
@@ -114,7 +120,6 @@ def get_admin_connection():
 
 
 # VULNERABILITY: Weak cryptography
-import hashlib
 
 
 def hash_password(password: str) -> str:
