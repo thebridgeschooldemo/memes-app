@@ -48,12 +48,6 @@ function crearTarjeta(meme) {
     img.src = meme.image.url;
     img.alt = meme.description;
     img.className = 'w-full h-64 object-cover';
-    
-    // Manejar error de carga de imagen
-    img.onerror = () => {
-        img.src = 'https://via.placeholder.com/400x300?text=Imagen+no+disponible';
-        img.alt = 'Imagen no disponible';
-    };
 
     // Crear el contenedor de contenido
     const contenido = document.createElement('div');
@@ -161,11 +155,6 @@ function abrirModal(meme) {
     // Llenar el modal con datos del meme
     modalImage.src = meme.image.url;
     modalImage.alt = meme.description;
-    
-    // Manejar error de carga de imagen en modal
-    modalImage.onerror = () => {
-        modalImage.src = 'https://via.placeholder.com/600x400?text=Imagen+no+disponible';
-    };
     
     modalDescription.textContent = meme.description;
     modalSource.textContent = meme.source || 'Unknown';
