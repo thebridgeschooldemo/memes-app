@@ -1,10 +1,22 @@
-# 🤖 Desarrollo con GitHub Copilot
+# 🤖 GitHub Copilot - Máster en IA Generativa
 
-Repositorio de ejemplo para la clase **"Desarrollo con GitHub Copilot"** del **Máster en IA Generativa** de [The Bridge](https://www.thebridge.tech/).
+Repositorio de ejemplo para las clases de **GitHub Copilot** del **Máster en IA Generativa** de [The Bridge](https://www.thebridge.tech/).
+
+## 📚 Clases que usan este repositorio
+
+Este repositorio se utiliza en las siguientes clases del máster:
+
+| Clase | Commit | Comando para clonar |
+|-------|--------|---------------------|
+| **Desarrollo con GitHub Copilot y Python** | `b8c28d7` | `git clone --branch b8c28d7 https://github.com/thebridgeschooldemo/memes-app.git` |
+| **Agentic DevOps** | _pendiente_ | _pendiente_ |
+| **MCP Servers y GitHub Copilot** | _pendiente_ | _pendiente_ |
+
+> 💡 **Tip**: Si quieres ver el código tal como estaba al finalizar una clase específica, usa el comando de la tabla para clonar ese commit concreto.
 
 ## ❓ ¿Qué es esto?
 
-Este repositorio contiene una aplicación web de ejemplo junto con todo el código y configuraciones necesarias para que puedas practicar lo que aprendiste durante la clase. Aquí podrás experimentar con GitHub Copilot, romper cosas, arreglarlas, y entender cómo funciona esta herramienta de inteligencia artificial que te ayuda a escribir código.
+Este repositorio contiene una aplicación web de ejemplo junto con todo el código y configuraciones necesarias para que puedas practicar lo que aprendiste durante las clases. Aquí podrás experimentar con GitHub Copilot, romper cosas, arreglarlas, y entender cómo funciona esta herramienta de inteligencia artificial que te ayuda a escribir código.
 
 ## 🚀 ¿Cómo empezar?
 
