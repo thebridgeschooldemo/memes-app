@@ -24,17 +24,9 @@ function configurarModoOscuro() {
     const iconoModo = document.getElementById('icono-modo');
     const root = document.documentElement;
     
-    // Cargar preferencia guardada o usar 'claro' por defecto
-    const modo = localStorage.getItem('modo') || 'claro';
-    
-    // Aplicar el modo guardado
-    if (modo === 'oscuro') {
-        root.classList.add('dark');
-        iconoModo.textContent = '☀️';
-    } else {
-        root.classList.remove('dark');
-        iconoModo.textContent = '🌑';
-    }
+    // Update icon based on current mode (already set by inline script)
+    const isDark = root.classList.contains('dark');
+    iconoModo.textContent = isDark ? '☀️' : '🌑';
     
     // Event listener para el toggle
     btnToggle.addEventListener('click', () => {
