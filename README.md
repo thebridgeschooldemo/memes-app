@@ -6,13 +6,13 @@ Repositorio de ejemplo para las clases de **GitHub Copilot** del **Máster en IA
 
 Este repositorio se utiliza en las siguientes clases del máster:
 
-| Clase | Commit | Comando para clonar |
-|-------|--------|---------------------|
-| **Desarrollo con GitHub Copilot y Python** | `b8c28d7` | `git clone --branch b8c28d7 https://github.com/thebridgeschooldemo/memes-app.git` |
+| Clase | Rama | Comando para clonar |
+|-------|------|---------------------|
+| **Desarrollo con GitHub Copilot y Python** | `clase-1` | `git clone --branch clase-1 https://github.com/thebridgeschooldemo/memes-app.git` |
 | **Agentic DevOps** | _pendiente_ | _pendiente_ |
 | **MCP Servers y GitHub Copilot** | _pendiente_ | _pendiente_ |
 
-> 💡 **Tip**: Si quieres ver el código tal como estaba al finalizar una clase específica, usa el comando de la tabla para clonar ese commit concreto.
+> 💡 **Tip**: Si quieres ver el código tal como estaba al finalizar una clase específica, usa el comando de la tabla para clonar esa rama.
 
 ## ❓ ¿Qué es esto?
 
@@ -34,6 +34,11 @@ cd memes-app
 ```
 
 ## ⚙️ Instalación y Configuración
+
+### 📋 Requisitos previos
+
+- [Python 3.8+](https://www.python.org/downloads/)
+- [Git](https://git-scm.com/downloads)
 
 ### 1️⃣ Crear un entorno virtual
 
