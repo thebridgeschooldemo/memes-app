@@ -9,6 +9,7 @@ Este repositorio se utiliza en las siguientes clases del máster:
 | Clase | Rama | Comando para clonar |
 |-------|------|---------------------|
 | **Desarrollo con GitHub Copilot y Python** | `clase-1` | `git clone --branch clase-1 https://github.com/thebridgeschooldemo/memes-app.git` |
+| **Clase 2** | `clase-2` | `git clone --branch clase-2 https://github.com/thebridgeschooldemo/memes-app.git` |
 | **Agentic DevOps** | _pendiente_ | _pendiente_ |
 | **MCP Servers y GitHub Copilot** | _pendiente_ | _pendiente_ |
 
