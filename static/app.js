@@ -10,12 +10,31 @@ let filtrosActivos = {
 
 // Cuando la página carga
 document.addEventListener('DOMContentLoaded', () => {
+    configurarModoOscuro();
     cargarMemes();
     configurarFiltros();
     configurarBuscador();
     configurarModal();
     configurarMasFiltros();
 });
+
+// Configurar modo oscuro
+function configurarModoOscuro() {
+    const btnToggle = document.getElementById('toggle-modo');
+    const iconoModo = document.getElementById('icono-modo');
+    const root = document.documentElement;
+    
+    // Update icon based on current mode (already set by inline script)
+    const isDark = root.classList.contains('dark');
+    iconoModo.textContent = isDark ? '☀️' : '🌑';
+    
+    // Event listener para el toggle
+    btnToggle.addEventListener('click', () => {
+        const esOscuro = root.classList.toggle('dark');
+        localStorage.setItem('modo', esOscuro ? 'oscuro' : 'claro');
+        iconoModo.textContent = esOscuro ? '☀️' : '🌑';
+    });
+}
 
 // Cargar memes del servidor
 async function cargarMemes() {
@@ -93,7 +112,7 @@ function crearTarjeta(meme) {
     
     // Crear el contenedor de la tarjeta
     const tarjeta = document.createElement('div');
-    tarjeta.className = 'meme-card bg-white rounded-lg overflow-hidden cursor-pointer';
+    tarjeta.className = 'meme-card bg-white dark:bg-gray-800 rounded-lg overflow-hidden cursor-pointer';
     tarjeta.dataset.memeId = meme.id;
 
     // Crear contenedor de imagen con indicador de fuente
@@ -137,11 +156,11 @@ function crearTarjeta(meme) {
 
     // Crear barra de acciones
     const acciones = document.createElement('div');
-    acciones.className = 'flex items-center justify-start gap-4 p-3 border-t border-gray-100';
+    acciones.className = 'flex items-center justify-start gap-4 p-3 border-t border-gray-100 dark:border-gray-700';
 
     // Botón favorito
     const btnFavorito = document.createElement('button');
-    btnFavorito.className = `action-btn favorito text-gray-400 hover:text-red-500 ${esFavorito ? 'active' : ''}`;
+    btnFavorito.className = `action-btn favorito text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 ${esFavorito ? 'active' : ''}`;
     btnFavorito.title = 'Favorito';
     btnFavorito.innerHTML = `
         <svg class="w-5 h-5" fill="${esFavorito ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,7 +174,7 @@ function crearTarjeta(meme) {
 
     // Botón descargar
     const btnDescargar = document.createElement('button');
-    btnDescargar.className = 'action-btn text-gray-400 hover:text-blue-500';
+    btnDescargar.className = 'action-btn text-gray-400 dark:text-gray-500 hover:text-blue-500 dark:hover:text-blue-400';
     btnDescargar.title = 'Descargar';
     btnDescargar.innerHTML = `
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,7 +188,7 @@ function crearTarjeta(meme) {
 
     // Botón enlace
     const btnEnlace = document.createElement('button');
-    btnEnlace.className = 'action-btn text-gray-400 hover:text-green-500';
+    btnEnlace.className = 'action-btn text-gray-400 dark:text-gray-500 hover:text-green-500 dark:hover:text-green-400';
     btnEnlace.title = 'Copiar enlace';
     btnEnlace.innerHTML = `
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -247,7 +266,7 @@ function copiarEnlace(meme) {
 // Mostrar notificación temporal
 function mostrarNotificacion(mensaje) {
     const notif = document.createElement('div');
-    notif.className = 'fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse';
+    notif.className = 'fixed bottom-4 right-4 bg-gray-800 dark:bg-gray-700 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse';
     notif.textContent = mensaje;
     document.body.appendChild(notif);
     setTimeout(() => notif.remove(), 2000);
