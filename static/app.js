@@ -65,6 +65,43 @@ function aplicarFiltros() {
     mostrarMemes(memesFiltrados);
 }
 
+// 🔢 Actualizar el contador de memes mostrados
+// Esta función actualiza el texto del contador con información contextual
+// según cuántos memes se están mostrando vs el total disponible
+function actualizarContador(visibles, total) {
+    const contador = document.getElementById('contador');
+    
+    // 🛡️ Verificamos que el elemento exista antes de manipularlo
+    // Esto previene errores si el HTML no tiene el elemento contador
+    if (!contador) return;
+    
+    // 🎯 Determinamos el mensaje según los resultados
+    let mensaje = '';
+    
+    if (visibles === 0) {
+        // 😢 No hay resultados: ayudamos al usuario a entender que no encontró nada
+        mensaje = `😢 No se encontraron memes (de <span class="font-bold">${total}</span> en total)`;
+    } else if (visibles === total) {
+        // 📸 Mostrando todo: el usuario ve la colección completa
+        mensaje = `📸 Mostrando todos los <span class="font-bold">${total}</span> memes`;
+    } else {
+        // 🔍 Vista filtrada: el usuario ve una selección de la colección
+        mensaje = `🔍 Mostrando <span class="font-bold">${visibles}</span> de <span class="font-bold">${total}</span> memes`;
+    }
+    
+    // 💫 Actualizamos el contenido del contador
+    contador.innerHTML = mensaje;
+    
+    // ✨ Añadimos una animación temporal para que el usuario note el cambio
+    // La animación "pulse" hace que el elemento parpadee suavemente
+    contador.classList.add('animate-pulse');
+    
+    // ⏱️ Removemos la animación después de 500ms para que no moleste
+    setTimeout(() => {
+        contador.classList.remove('animate-pulse');
+    }, 500);
+}
+
 // Mostrar memes en la galería
 function mostrarMemes(memes) {
     const galeria = document.getElementById('galeria');
@@ -75,6 +112,11 @@ function mostrarMemes(memes) {
     if (memes.length === 0) {
         galeria.classList.add('hidden');
         sinResultados.classList.remove('hidden');
+        // 📊 Actualizamos el contador solo si tenemos memes cargados
+        // Evitamos mostrar "0 de 0" durante la carga inicial
+        if (todosMemes.length > 0) {
+            actualizarContador(memes.length, todosMemes.length);
+        }
         return;
     }
 
@@ -85,6 +127,13 @@ function mostrarMemes(memes) {
         const tarjeta = crearTarjeta(meme);
         galeria.appendChild(tarjeta);
     });
+    
+    // 📊 Actualizamos el contador después de mostrar los memes
+    // Esto mantiene al usuario informado de cuántos memes está viendo
+    // Solo actualizamos si tenemos datos válidos para mostrar
+    if (todosMemes.length > 0) {
+        actualizarContador(memes.length, todosMemes.length);
+    }
 }
 
 // Crear una tarjeta de meme
