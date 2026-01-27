@@ -1,4 +1,4 @@
-name: CI - Pruebas Automáticas
+name: 🔄 Integración Continua (CI)
 
 # Cuándo ejecutar el workflow
 on:
@@ -34,7 +34,7 @@ jobs:
         pip install ruff
         ruff check . --ignore=E501
 
-    # 5. Verificar que la app arranca
-    - name: 🚀 Verificar que FastAPI arranca
+    # 5. Ejecutar tests con pytest
+    - name: 🧪 Ejecutar tests
       run: |
-        timeout 10 python -c "from app import app; print('✅ App carga correctamente')" || true
+        pytest tests/ -v --tb=short
