@@ -3,7 +3,7 @@ ruff==0.14.13
 
 # Security & Auth (versions with known CVEs)
 pyjwt==2.4.0
-cryptography==41.0.0
+cryptography==46.0.5
 requests==2.31.0
 
 # Utilities (versions with known CVEs)
