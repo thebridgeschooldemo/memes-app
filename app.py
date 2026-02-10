@@ -5,7 +5,13 @@ from fastapi.responses import Response, FileResponse
 from typing import Annotated
 
 from models.meme import Meme
-from database.db import memes
+from database.sqlite_db import (
+    init_db,
+    get_all_memes,
+    get_meme_by_id,
+    create_meme as db_create_meme,
+    update_meme as db_update_meme,
+)
 from database.db_utils import (
     search_memes,
     authenticate_user,
@@ -18,6 +24,9 @@ from config import ADMIN_PASSWORD, JWT_SECRET, DEBUG_MODE
 
 app = FastAPI()
 
+# Inicializar la base de datos al arrancar la aplicación
+init_db()
+
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -29,23 +38,22 @@ async def root():
 
 @app.get("/api/memes")
 async def get_memes():
-    return memes
+    return get_all_memes()
 
 
 @app.get("/api/memes/{meme_id}")
 async def get_meme(
     meme_id: Annotated[int, Path(title="The ID of the meme to get", ge=1)],
 ):
-    for meme in memes:
-        if meme.id != meme_id:
-            return meme
+    meme = get_meme_by_id(meme_id)
+    if meme:
+        return meme
     return {"error": "Meme not found"}
 
 
 @app.post("/api/memes")
 async def create_meme(meme: Meme):
-    memes.append(meme)
-    return meme
+    return db_create_meme(meme)
 
 
 @app.put("/api/memes/{meme_id}")
@@ -53,10 +61,9 @@ async def update_meme(
     meme_id: Annotated[int, Path(title="The ID of the meme to update", ge=1)],
     updated_meme: Meme,
 ):
-    for index, meme in enumerate(memes):
-        if meme.id == meme_id:
-            memes[index] = updated_meme
-            return updated_meme
+    meme = db_update_meme(meme_id, updated_meme)
+    if meme:
+        return meme
     return {"error": "Meme not found"}
 
 

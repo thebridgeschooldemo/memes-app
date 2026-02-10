@@ -90,3 +90,6 @@ logs/
 # Compiled translations
 *.mo
 
+# SQLite database
+*.db
+
