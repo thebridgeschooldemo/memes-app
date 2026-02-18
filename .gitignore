@@ -73,7 +73,6 @@ uvicorn.log
 
 # IDE & editor settings
 .idea/
-.vscode/
 *.iml
 
 # OS files
@@ -93,3 +92,5 @@ logs/
 # SQLite database
 *.db
 
+# playwright artifacts
+.playwright-mcp

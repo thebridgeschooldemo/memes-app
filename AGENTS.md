@@ -1,0 +1,1 @@
+Siempre que el usuario te pida arrancar la aplicacion debes usar fastapi dev

@@ -1,0 +1,38 @@
+{
+    "servers": {
+        "github": {
+            "type": "http",
+            "url": "https://api.githubcopilot.com/mcp/"
+        },
+        "playwright": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@playwright/mcp@latest",
+                "--browser=msedge"
+            ]
+        },
+        "better-icons-mcp": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "better-icons"
+            ]
+        },
+        "drawio": {
+            "command": "npx",
+            "args": [
+                "@drawio/mcp"
+            ]
+        },
+        // "drawio-mcp-app": {
+        //     "type": "http",
+        //     "url": "https://mcp.draw.io/mcp"
+        // },
+        "excalidraw": {
+            "type": "http",
+            "url": "https://mcp.excalidraw.com/mcp"
+        },
+    }
+}
