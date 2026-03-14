@@ -2,7 +2,7 @@ fastapi[standard]==0.128.0
 ruff==0.14.13
 
 # Security & Auth (versions with known CVEs)
-pyjwt==2.4.0
+pyjwt==2.12.0
 cryptography==41.0.0
 requests==2.31.0
 
